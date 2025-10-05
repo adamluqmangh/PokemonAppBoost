@@ -2,17 +2,21 @@ package adam.pokemon.myapp.ui.adapter
 
 import adam.pokemon.myapp.R
 import adam.pokemon.myapp.api.pokemonlist.model.PokemonList
+import adam.pokemon.myapp.viewmodel.PokemonViewModel
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import org.w3c.dom.Text
 
 class PokemonAdapter(
     val pokemonData: List<PokemonList>,
-    val pokemonClickListener: OnItemClickListener
+    val pokemonClickListener: OnItemClickListener,
+    private val viewModel: PokemonViewModel
+
 ): RecyclerView.Adapter<PokemonAdapter.PokemonAdapterViewHolder>() {
 
     interface OnItemClickListener {
@@ -21,6 +25,7 @@ class PokemonAdapter(
 
     inner class PokemonAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val pokemonName: TextView = itemView.findViewById(R.id.pokemon_name)
+        val pokemonFavoriteButton: ImageView = itemView.findViewById(R.id.favorite_button)
 
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonAdapterViewHolder {
@@ -37,6 +42,18 @@ class PokemonAdapter(
         val currentPokemonName = "${position + 1}." + currentPokemon.name
 
         holder.pokemonName.text = currentPokemonName
+
+        val updateFavoriteIcon = if (viewModel.isFavourite(currentPokemon)) {
+            R.drawable.favorite_icon
+        } else {
+            R.drawable.favourite_icon_outline
+        }
+        holder.pokemonFavoriteButton.setImageResource(updateFavoriteIcon)
+
+        holder.pokemonFavoriteButton.setOnClickListener {
+            viewModel.toggleFavourite(currentPokemon)
+            notifyItemChanged(position)
+        }
 
     }
 }
