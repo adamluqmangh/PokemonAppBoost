@@ -3,6 +3,7 @@ package adam.pokemon.myapp.ui.adapter
 import adam.pokemon.myapp.R
 import adam.pokemon.myapp.api.pokemonlist.model.PokemonList
 import adam.pokemon.myapp.viewmodel.PokemonViewModel
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -53,6 +54,10 @@ class PokemonAdapter(
         holder.pokemonFavoriteButton.setOnClickListener {
             viewModel.toggleFavourite(currentPokemon)
             notifyItemChanged(position)
+        }
+
+        holder.itemView.setOnClickListener {
+            pokemonClickListener.onItemClick(currentPokemon, position)
         }
 
     }
