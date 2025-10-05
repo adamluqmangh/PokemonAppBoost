@@ -95,7 +95,16 @@ class HomeFragment: Fragment(), PokemonAdapter.OnItemClickListener {
 
 
     override fun onItemClick(item: PokemonList, position: Int) {
-        TODO("Not yet implemented")
+        val bundle = Bundle().apply {
+            putString("pokemon_name", item.name)
+        }
+        val fragment = PokemonDetailFragment()
+        fragment.arguments = bundle
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.navigation_fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     fun toggleSort() {
