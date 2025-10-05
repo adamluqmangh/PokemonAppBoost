@@ -9,8 +9,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +27,10 @@ class HomeFragment: Fragment(), PokemonAdapter.OnItemClickListener {
     private lateinit var pokemonViewModel: PokemonViewModel
     private var pokemonRecyclerView: RecyclerView? =  null
     private lateinit var pokemonAdapter: PokemonAdapter
+    private lateinit var pokemonListText: TextView
+    private var ascending = true // toggle for sort order
+    private lateinit var pokemonSortButton: ImageButton
+
 
 
     override fun onCreateView(
@@ -39,10 +47,15 @@ class HomeFragment: Fragment(), PokemonAdapter.OnItemClickListener {
         init()
         initViews(view)
         setupPokemonRecyclerView()
+        pokemonSortButton.setOnClickListener{
+            toggleSort()
+        }
     }
 
     private fun initViews(view: View){
         pokemonRecyclerView = view.findViewById(R.id.pokemonRecyclerView)
+        pokemonListText = view.findViewById(R.id.pokemonListText)
+        pokemonSortButton = view.findViewById(R.id.pokemonSortButton)
 
     }
 
@@ -50,16 +63,19 @@ class HomeFragment: Fragment(), PokemonAdapter.OnItemClickListener {
         pokemonViewModel.pokemonData.observe(viewLifecycleOwner){
             when(it){
                 is Response.Success -> {
-                    Timber.tag("successful").e(it.data.toString())
-                    pokemonAdapter = PokemonAdapter(it.data!!.results, this)
+                    val sortedList = if (ascending) {
+                        it.data!!.results.sortedBy { it.name.lowercase() }
+                    } else {
+                        it.data!!.results.sortedByDescending { it.name.lowercase() }
+                    }
+                    pokemonAdapter = PokemonAdapter(sortedList, this)
+                    val pokemonAdapters = PokemonAdapter(sortedList, this)
+                    pokemonRecyclerView!!.adapter = pokemonAdapters
                 }
                 is Response.Loading -> {
-                    Timber.tag("loading").e(it.data.toString())
 
                 }
                 is Response.Error -> {
-                    Timber.tag("successful").e(it.data.toString())
-
 
                 }
             }
@@ -68,12 +84,23 @@ class HomeFragment: Fragment(), PokemonAdapter.OnItemClickListener {
     }
 
     fun setupPokemonRecyclerView(){
-        pokemonRecyclerView!!.layoutManager = GridLayoutManager(context, 3, RecyclerView.HORIZONTAL, false)
+        pokemonRecyclerView!!.layoutManager = LinearLayoutManager(context,  RecyclerView.VERTICAL, false)
+        val divider = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+        val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.recycler_divider_white)
+        if (drawable != null) {
+            divider.setDrawable(drawable)
+        }
+        pokemonRecyclerView!!.addItemDecoration(divider)
     }
 
 
     override fun onItemClick(item: PokemonList, position: Int) {
         TODO("Not yet implemented")
+    }
+
+    fun toggleSort() {
+        ascending = !ascending
+        init() // reapply sort with new order
     }
 
 
