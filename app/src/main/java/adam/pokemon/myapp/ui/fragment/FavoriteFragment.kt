@@ -57,7 +57,6 @@ class FavoriteFragment: Fragment(), PokemonAdapter.OnItemClickListener {
 
     fun setupRecyclerView(){
         favoriteRecyclerView?.layoutManager = LinearLayoutManager(context,  RecyclerView.VERTICAL, false)
-        
         val divider = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.recycler_divider_white)
         if (drawable != null) {
