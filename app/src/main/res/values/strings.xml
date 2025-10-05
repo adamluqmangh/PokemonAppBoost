@@ -3,4 +3,6 @@
     <string name="home_string">Home</string>
     <string name="favorite_string">Favorite</string>
 
+    <string name="pokemon_list_string">Pokemon List String</string>
+
 </resources>
