@@ -68,8 +68,8 @@ class HomeFragment: Fragment(), PokemonAdapter.OnItemClickListener {
                     } else {
                         it.data!!.results.sortedByDescending { it.name.lowercase() }
                     }
-                    pokemonAdapter = PokemonAdapter(sortedList, this)
-                    val pokemonAdapters = PokemonAdapter(sortedList, this)
+                    pokemonAdapter = PokemonAdapter(sortedList, this, pokemonViewModel)
+                    val pokemonAdapters = PokemonAdapter(sortedList, this, pokemonViewModel)
                     pokemonRecyclerView!!.adapter = pokemonAdapters
                 }
                 is Response.Loading -> {
