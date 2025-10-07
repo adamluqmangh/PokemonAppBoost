@@ -66,7 +66,7 @@ class FavoriteFragment: Fragment(), PokemonAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(item: PokemonList, position: Int) {
-        TODO("Not yet implemented")
+
     }
 }
 
