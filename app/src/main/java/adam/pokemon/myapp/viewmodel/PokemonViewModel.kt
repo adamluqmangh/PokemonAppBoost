@@ -1,6 +1,8 @@
 package adam.pokemon.myapp.viewmodel
 
+import adam.pokemon.myapp.api.pokemonlist.model.Ability
 import adam.pokemon.myapp.api.pokemonlist.model.ApiResponsePokemonList
+import adam.pokemon.myapp.api.pokemonlist.model.PokemonAbility
 import adam.pokemon.myapp.api.pokemonlist.model.PokemonList
 import adam.pokemon.myapp.api.pokemonlist.repository.PokemonRepository
 import adam.pokemon.myapp.utils.Response
@@ -10,6 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,9 +27,20 @@ class PokemonViewModel @Inject constructor(
     private val _favourites = MutableLiveData<List<PokemonList>>()
     val favourites: LiveData<List<PokemonList>> get() = _favourites
 
+
+    val pokemonDetail: LiveData<Response<PokemonAbility>>
+        get() = pokemonRepository.pokemonDetail
+
+
     init {
         viewModelScope.launch {
             pokemonRepository.getPokemon()
+        }
+    }
+
+    fun loadPokemonDetail(name: String) {
+        viewModelScope.launch {
+            pokemonRepository.getPokemonDetail(name)
         }
     }
 
@@ -43,4 +57,6 @@ class PokemonViewModel @Inject constructor(
     fun isFavourite(pokemon: PokemonList): Boolean {
         return favouriteSet.contains(pokemon)
     }
+
+
 }
