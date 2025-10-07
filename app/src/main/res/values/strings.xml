@@ -4,5 +4,6 @@
     <string name="favorite_string">Favorite</string>
 
     <string name="pokemon_list_string">Pokemon List</string>
+    <string name="loading_pokemon_details">Loading Pokémon details...</string>
 
 </resources>
