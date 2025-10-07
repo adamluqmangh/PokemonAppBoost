@@ -1,6 +1,7 @@
 package adam.pokemon.myapp.api.pokemonlist.repository
 
 import adam.pokemon.myapp.api.pokemonlist.model.Ability
+import adam.pokemon.myapp.api.pokemonlist.model.AbilityDetail
 import adam.pokemon.myapp.api.pokemonlist.model.ApiResponsePokemonList
 import adam.pokemon.myapp.api.pokemonlist.model.PokemonAbility
 import adam.pokemon.myapp.api.pokemonlist.retrofit.PokemonAPI
@@ -22,6 +23,10 @@ class PokemonRepository  @Inject constructor(
     private val _pokemonDetail = MutableLiveData<Response<PokemonAbility>>()
     val pokemonDetail: LiveData<Response<PokemonAbility>>
         get() = _pokemonDetail
+
+    private val _abilityDescriptions = MutableLiveData<Response<AbilityDetail>>()
+    val abilityDescriptions: LiveData<Response<AbilityDetail>>
+        get() = _abilityDescriptions
 
     suspend fun getPokemon() = withContext(Dispatchers.IO){
         _pokemonData.postValue(Response.Loading())
@@ -52,4 +57,21 @@ class PokemonRepository  @Inject constructor(
             _pokemonDetail.postValue(Response.Error(e.message.toString()))
         }
     }
+
+    suspend fun getAbilityDetail(url: String) = withContext(Dispatchers.IO) {
+        _abilityDescriptions.postValue(Response.Loading())
+        try {
+            val result = pokemonAPI.getAbilityDetail(url)
+            if (result.isSuccessful && result.body() != null) {
+                _abilityDescriptions.postValue(Response.Success(result.body()))
+            } else {
+                _abilityDescriptions.postValue(Response.Error(result.errorBody().toString()))
+            }
+        } catch (e: Exception) {
+            _abilityDescriptions.postValue(Response.Error(e.message.toString()))
+        }
+    }
+
+
+
 }
