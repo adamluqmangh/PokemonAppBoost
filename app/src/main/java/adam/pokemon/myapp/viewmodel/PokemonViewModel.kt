@@ -1,6 +1,7 @@
 package adam.pokemon.myapp.viewmodel
 
 import adam.pokemon.myapp.api.pokemonlist.model.Ability
+import adam.pokemon.myapp.api.pokemonlist.model.AbilityDetail
 import adam.pokemon.myapp.api.pokemonlist.model.ApiResponsePokemonList
 import adam.pokemon.myapp.api.pokemonlist.model.PokemonAbility
 import adam.pokemon.myapp.api.pokemonlist.model.PokemonList
@@ -31,6 +32,11 @@ class PokemonViewModel @Inject constructor(
     val pokemonDetail: LiveData<Response<PokemonAbility>>
         get() = pokemonRepository.pokemonDetail
 
+    val abilityDescriptions: LiveData<Response<AbilityDetail>>
+        get() = pokemonRepository.abilityDescriptions
+
+
+
 
     init {
         viewModelScope.launch {
@@ -56,6 +62,12 @@ class PokemonViewModel @Inject constructor(
 
     fun isFavourite(pokemon: PokemonList): Boolean {
         return favouriteSet.contains(pokemon)
+    }
+
+    fun loadAbilityDetail(url: String) {
+        viewModelScope.launch {
+            pokemonRepository.getAbilityDetail(url)
+        }
     }
 
 
